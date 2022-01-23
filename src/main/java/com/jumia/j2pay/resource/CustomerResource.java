@@ -2,8 +2,10 @@ package com.jumia.j2pay.resource;
 
 import com.jumia.j2pay.dto.response.UniversalResponse;
 import com.jumia.j2pay.dto.util.FilterRequest;
-import com.jumia.j2pay.services.interfaces.ICountryService;
+import com.jumia.j2pay.services.interfaces.ICustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,19 +23,12 @@ import java.util.Optional;
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
 public class CustomerResource {
-    private final ICountryService countryService;
+    private final ICustomerService countryService;
 
-    @GetMapping("/countries")
-    public Mono<ServerResponse> listCountries() {
-        return Mono.fromCallable(countryService::listCountries)
-                .flatMap(res -> ServerResponse.ok().body(res, UniversalResponse.class));
-
-    }
-
-
-    @GetMapping("/phone")
-    public Mono<ServerResponse> getPhoneNumbers(@RequestParam int size, @RequestParam int page) {
-        return Mono.fromCallable(countryService::listPhoneNumbers)
+    @GetMapping("/customers")
+    public Mono<ServerResponse> listCountries(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable= PageRequest.of(page,size);
+        return countryService.listCustomers(pageable).then()
                 .flatMap(res -> ServerResponse.ok().body(res, UniversalResponse.class));
     }
 
@@ -53,7 +48,7 @@ public class CustomerResource {
                 .size(size)
                 .page(page)
                 .build();
-        return Mono.fromCallable(() -> countryService.filterPhoneNumbers(filterRequest))
+        return countryService.filterPhoneNumbers(filterRequest)
                 .flatMap(res -> ServerResponse.ok().body(res, UniversalResponse.class));
     }
 

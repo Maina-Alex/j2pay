@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author Alex Maina
@@ -17,9 +18,10 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "customer")
 public class Customer {
     @Id
-    private long id;
+    private int id;
     private String name;
     private String phone;
 }

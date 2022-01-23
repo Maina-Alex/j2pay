@@ -4,6 +4,7 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 import org.hibernate.dialect.function.StandardSQLFunction;
 import org.hibernate.dialect.function.VarArgsSQLFunction;
+import org.hibernate.dialect.identity.IdentityColumnSupport;
 import org.hibernate.type.StringType;
 
 import java.sql.Types;
@@ -34,7 +35,6 @@ public class SQLDialect extends Dialect {
         registerColumnType(Types.BINARY, "blob");
         registerColumnType(Types.VARBINARY, "blob");
         registerColumnType(Types.LONGVARBINARY, "blob");
-        // registerColumnType(Types.NULL, "null");
         registerColumnType(Types.BLOB, "blob");
         registerColumnType(Types.CLOB, "clob");
         registerColumnType(Types.BOOLEAN, "integer");
@@ -99,7 +99,7 @@ public class SQLDialect extends Dialect {
     }
 
     public boolean hasAlterTable() {
-        return false; // As specify in NHibernate dialect
+        return false;
     }
 
     public boolean dropConstraints() {
