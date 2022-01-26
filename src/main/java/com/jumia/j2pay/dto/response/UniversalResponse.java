@@ -16,5 +16,6 @@ import lombok.Setter;
 public class UniversalResponse {
     private String status;
     private String message;
-    private Object data;
+    private Object response;
+    private Pagination pagination;
 }

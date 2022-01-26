@@ -19,7 +19,7 @@ public enum Country {
     MOROCCO("Morocco","212","\\(212\\)\\ ?[5-9]\\d{8}$"),
     MOZAMBIQUE("Mozambique","258","\\(258\\)\\ ?[28]\\d{7,8}$"),
     UGANDA("Uganda","256","\\(256\\)\\ ?\\d{9}$");
-
+   @Getter
     private final String name;
     private final String code;
     private final String regex;

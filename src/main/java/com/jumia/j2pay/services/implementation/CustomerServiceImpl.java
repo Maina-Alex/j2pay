@@ -1,5 +1,7 @@
 package com.jumia.j2pay.services.implementation;
 
+import com.jumia.j2pay.dto.response.CustomerDto;
+import com.jumia.j2pay.dto.response.Pagination;
 import com.jumia.j2pay.dto.response.UniversalResponse;
 import com.jumia.j2pay.dto.util.FilterRequest;
 import com.jumia.j2pay.model.Country;
@@ -35,7 +37,36 @@ public class CustomerServiceImpl implements ICustomerService {
     public Mono<UniversalResponse> listCustomers(Pageable pageable) {
         return Mono.fromCallable(()->{
             List<Customer> customers= customerRepository.findAll(pageable).toList();
-            return new UniversalResponse("success","List of countries",customers);
+            long pageNumber= customerRepository.count();
+            Pagination pagination= Pagination
+                            .builder()
+                            .page(pageable.getPageNumber())
+                            .size(pageable.getPageSize())
+                            .recordSize(pageNumber)
+                    .pages((int) Math.ceil(pageNumber/pageable.getPageSize()))
+                    .build();
+
+            List<CustomerDto> customerDtos= customers.stream()
+                    .map(customer -> {
+                        boolean isValid= validatePhone().test(customer.getPhone());
+                        String countryCode= customer.getPhone().split(" ")[0]
+                                .replace("(","")
+                                .replace(")","")
+                                .trim();
+                        Country countryByCode= Arrays.stream(Country.values())
+                                .filter(country -> country.getCode().equals(countryCode))
+                                .findAny()
+                                .orElse(null);
+                        String countryName= countryByCode!=null?countryByCode.getName():"";
+                        return CustomerDto.builder().id(customer.getId())
+                                .country(countryName)
+                                .valid(isValid? "Valid":"Invalid")
+                                .phone(customer.getPhone())
+                                .name(customer.getName())
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+            return new UniversalResponse("success","List of countries",customerDtos,pagination);
         })
                 .publishOn(Schedulers.boundedElastic());
     }
@@ -117,8 +148,33 @@ public class CustomerServiceImpl implements ICustomerService {
                         .filter(customer-> filterByCountryCode().test(code,customer))
                         .collect(Collectors.toList());
             }
-            List<String> phoneList= customerList.stream().map(Customer::getPhone).collect(Collectors.toList());
-            return new UniversalResponse("success","filtered search",phoneList);
+            Pagination pagination= Pagination.builder()
+                    .page(filterRequest.getPage())
+                    .size(filterRequest.getSize())
+                    .recordSize(customerList.size())
+                    .pages((int) Math.ceil(customerList.size()/filterRequest.getSize()))
+                    .build();
+            List<CustomerDto> customerDtos= customerList.stream()
+                            .map(customer -> {
+                                boolean isValid= validatePhone().test(customer.getPhone());
+                                String countryCode= customer.getPhone().split(" ")[0]
+                                        .replace("(","")
+                                        .replace(")","")
+                                        .trim();
+                                Country countryByCode= Arrays.stream(Country.values())
+                                        .filter(country -> country.getCode().equals(countryCode))
+                                        .findAny()
+                                        .orElse(null);
+                                String countryName= countryByCode!=null?countryByCode.getName():"";
+                                return CustomerDto.builder().id(customer.getId())
+                                        .country(countryName)
+                                        .valid(isValid? "Valid":"Invalid")
+                                        .phone(customer.getPhone())
+                                        .name(customer.getName())
+                                        .build();
+                            })
+                            .collect(Collectors.toList());
+            return new UniversalResponse("success","filtered search", customerDtos,pagination);
         })
                 .publishOn(Schedulers.boundedElastic());
 

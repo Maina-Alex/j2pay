@@ -33,9 +33,9 @@ public class ICustomerServiceTests {
                 .create(monoResponse)
                 .consumeNextWith(res -> {
                     assertThat(res.getStatus()).isEqualTo("success");
-                    assertThat(res.getData()).isInstanceOf(List.class);
-                    System.out.println(res.getData());
-                    assertThat(((List<Customer>) res.getData()).size()).isGreaterThan(0);
+                    assertThat(res.getResponse()).isInstanceOf(List.class);
+                    System.out.println(res.getResponse());
+                    assertThat(((List<Customer>) res.getResponse()).size()).isGreaterThan(0);
                 })
                 .verifyComplete();
     }
@@ -49,8 +49,8 @@ public class ICustomerServiceTests {
                 .create(monoResponse)
                 .consumeNextWith(res->{
                     assertThat(res.getStatus()).isEqualTo("success");
-                    assertThat(res.getData()).isInstanceOf(List.class);
-                    assertThat(((List<Customer>) res.getData()).size()).isLessThan(11);
+                    assertThat(res.getResponse()).isInstanceOf(List.class);
+                    assertThat(((List<Customer>) res.getResponse()).size()).isLessThan(11);
                 })
                 .verifyComplete();
     }
@@ -65,8 +65,8 @@ public class ICustomerServiceTests {
                 .create(monoResponse)
                 .consumeNextWith(res-> {
                     assertThat(res.getStatus()).isEqualTo("success");
-                    assertThat(res.getData()).isInstanceOf(List.class);
-                    assertThat((List<Customer>) res.getData()).size().isEqualTo(1);
+                    assertThat(res.getResponse()).isInstanceOf(List.class);
+                    assertThat((List<Customer>) res.getResponse()).size().isEqualTo(1);
                 })
                 .verifyComplete();
     }
@@ -79,8 +79,8 @@ public class ICustomerServiceTests {
         StepVerifier.create(monoResponse)
                 .consumeNextWith(res-> {
                     assertThat(res.getStatus()).isEqualTo("success");
-                    assertThat(res.getData()).isInstanceOf(List.class);
-                    assertThat(res.getData()).isNotNull();
+                    assertThat(res.getResponse()).isInstanceOf(List.class);
+                    assertThat(res.getResponse()).isNotNull();
                 })
                 .verifyComplete();
     }
@@ -93,8 +93,8 @@ public class ICustomerServiceTests {
         StepVerifier.create(monoResponse)
                 .consumeNextWith(res-> {
                     assertThat(res.getStatus()).isEqualTo("success");
-                    assertThat(res.getData()).isInstanceOf(List.class);
-                    assertThat((List<Customer>) res.getData()).size().isGreaterThan(0);
+                    assertThat(res.getResponse()).isInstanceOf(List.class);
+                    assertThat((List<Customer>) res.getResponse()).size().isGreaterThan(0);
                 })
                 .verifyComplete();
     }
