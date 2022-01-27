@@ -19,4 +19,4 @@
 
 #####How to start backend application
 
-1. 
+1. java -jar j2pay-0.0.1-SNAPSHOT.jar
