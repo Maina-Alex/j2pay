@@ -38,7 +38,7 @@ public class CustomerResource {
                                                    @RequestParam Optional<String> code,
                                                    @RequestParam Optional<String> number,
                                                    @RequestParam(defaultValue = "0") int page ,
-                                                   @RequestParam (defaultValue = "10")int size
+                                                   @RequestParam (defaultValue = "40")int size
                                                    ) {
         var filterRequest = FilterRequest.builder()
                 .code(code.orElse(null))
