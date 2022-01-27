@@ -152,7 +152,7 @@ public class CustomerServiceImpl implements ICustomerService {
                     .page(filterRequest.getPage())
                     .size(filterRequest.getSize())
                     .recordSize(customerList.size())
-                    .pages((int) Math.ceil(customerList.size()/filterRequest.getSize()))
+                    .pages((int) Math.ceil( (filterRequest.getSize()!=0)?customerList.size()/filterRequest.getSize():0))
                     .build();
             List<CustomerDto> customerDtos= customerList.stream()
                             .map(customer -> {
