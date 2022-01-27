@@ -33,6 +33,11 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements ICustomerService {
     private final CustomerRepository customerRepository;
 
+    /**
+     *
+     * @param pageable page and size
+     * @return Publisher of UniversalResponse wrapper class
+     */
     @Override
     public Mono<UniversalResponse> listCustomers(Pageable pageable) {
         return Mono.fromCallable(()->{
@@ -71,6 +76,10 @@ public class CustomerServiceImpl implements ICustomerService {
                 .publishOn(Schedulers.boundedElastic());
     }
 
+    /**
+     * @Params String : phoneNumber
+     * @return Boolean : if phone number is valid aganist country regex
+     */
     Predicate<String> validatePhone(){
         return phone-> {
             String countryCode= phone.split(" ")[0]
@@ -88,6 +97,11 @@ public class CustomerServiceImpl implements ICustomerService {
             return matcher.matches();
         };
     }
+
+    /**
+     * @Params Phone number and country name
+     * @return boolean if passed country name matches given phoneNumber's  country name
+     */
     BiPredicate<String,String> filterByCountryName(){
         return (phone,name)-> {
             String countryCode= phone.split(" ")[0]
@@ -117,6 +131,11 @@ public class CustomerServiceImpl implements ICustomerService {
         };
     }
 
+    /**
+     *
+     * @param filterRequest : Filter request containing filter params
+     * @return Publisher of UniversalResponse class
+     */
     @Override
     public Mono<UniversalResponse> filterPhoneNumbers(FilterRequest filterRequest) {
         return Mono.fromCallable(()->{

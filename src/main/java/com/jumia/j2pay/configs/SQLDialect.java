@@ -8,6 +8,8 @@ import java.sql.Types;
 /**
  * @author Alex Maina
  * @created 17/01/2022
+ *
+ * SQLITE DIALECT CONFIGURATION
  */
 
 public class SQLDialect extends Dialect {
